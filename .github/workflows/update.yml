@@ -24,10 +24,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          latest=$(gh api repos/hiddify/hiddify-app/releases/latest --jq .tag_name | sed 's/^v//')
+          latest=$(gh api repos/hiddify/hiddify-app/releases --paginate \
+            --jq '.[] | select(.draft == false and .prerelease == false) | .tag_name' \
+            | sed 's/^v//' \
+            | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
+            | sort -V | tail -1)
           current=$(sed -nE 's/^ *version = "([^"]+)".*/\1/p' hiddify.nix | head -1)
           echo "current=$current latest=$latest"
-          if [ "$latest" = "$current" ]; then
+          newest=$(printf '%s\n%s\n' "$current" "$latest" | sort -V | tail -1)
+          if [ -z "$latest" ] || [ "$latest" = "$current" ] || [ "$newest" != "$latest" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -42,7 +47,9 @@ jobs:
 
       - name: Build (catches layout changes in the AppImage)
         if: steps.bump.outputs.changed == 'true'
-        run: nix build .#hiddify --print-build-logs
+        run: |
+          nix build .#hiddify --print-build-logs
+          git checkout -- flake.lock
 
       - name: Open PR
         if: steps.bump.outputs.changed == 'true'
