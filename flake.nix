@@ -39,6 +39,7 @@
         apps.default = {
           type = "app";
           program = "${hiddify}/bin/hiddify";
+          meta.description = "Hiddify proxy client";
         };
       }
     );
