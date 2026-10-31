@@ -17,7 +17,7 @@ Add this flake as an input to your `flake.nix`:
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     hiddify = {
-      url = "github:<ZTZ-V1G>/hiddify-nix";
+      url = "github:ZTZ-V1G/hiddify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
