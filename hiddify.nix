@@ -2,7 +2,7 @@
 
 let
   pname = "hiddify";
-  version = "5.2.1";
+  version = "4.0.4";
   src = fetchurl {
     url = "https://github.com/hiddify/hiddify-app/releases/download/v${version}/Hiddify-Linux-x64-AppImage.AppImage";
     hash = "sha256-giFpcejl/Yqvb1lq/guf+rxQ6yjgJxEzzY9Ic0pROnA=";
