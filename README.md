@@ -28,7 +28,7 @@ Then install it in your system configuration:
 
 ```nix
 environment.systemPackages = [
-  inputs.hiddify.packages.${system}.default
+  inputs.hiddify.packages.${pkgs.stdenv.hostPlatform.system}.default
 ];
 ```
 
